@@ -25,30 +25,30 @@ public class ProductService {
 
     private Mono<Void> validateName(String name) {
         if (name == null || name.isBlank()) {
-            return Mono.error(new InternalServerErrorException("Nome não informado"));
+            return Mono.error(new InternalServerErrorException("Name not provided"));
         }
         if (name.length() < 3) {
-            return Mono.error(new InternalServerErrorException("Nome com menos de 3 caracteres"));
+            return Mono.error(new InternalServerErrorException("Name has less than 3 characters"));
         }
         if (name.length() > 50) {
-            return Mono.error(new InternalServerErrorException("Nome com mais de 50 caracteres"));
+            return Mono.error(new InternalServerErrorException("Name has more than 50 characters"));
         }
         return Mono.empty();
     }
 
     private Mono<Void> validatePrice(BigDecimal price) {
         if (price == null) {
-            return Mono.error(new InternalServerErrorException("Preço não informado"));
+            return Mono.error(new InternalServerErrorException("Price not provided"));
         }
         if (price.compareTo(BigDecimal.ZERO) <= 0) {
-            return Mono.error(new InternalServerErrorException("Preço deve ser maior que zero"));
+            return Mono.error(new InternalServerErrorException("Price must be greater than zero"));
         }
         return Mono.empty();
     }
 
     private Mono<Void> validateUniqueName(String name) {
         return productRepository.findByName(name)
-            .flatMap(existing -> Mono.error(new InternalServerErrorException("Já existe um produto com esse nome")))
+            .flatMap(existing -> Mono.error(new InternalServerErrorException("A product with this name already exists")))
             .then();
     }
 }
